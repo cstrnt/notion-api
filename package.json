@@ -1,8 +1,8 @@
 {
-  "name": "notion-api",
+  "name": "notion-api-js",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/notion.js",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js"
@@ -11,9 +11,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "node-fetch": "^2.3.0"
-  },
-  "devDependencies": {
-    "nodemon": "^1.18.10"
+    "cross-fetch": "^3.0.1"
   }
 }
