@@ -28,7 +28,7 @@ class Notion {
         const { id, type, properties, format } = entries[key].value;
         return values.push({ id, type, properties, format });
       });
-      return values;
+      return makeHTML(values);
     });
   }
 

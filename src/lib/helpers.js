@@ -16,13 +16,12 @@ function formatToHtml(ObjectToParse) {
   const color = format && format.block_color;
   const content = properties && properties.title;
   const style = color ? ` style="color:${color}"` : '';
-  console.log(type);
   if (!content && type !== 'divider') {
     type = 'break';
   }
   switch (types[type]) {
     case types.page: {
-      return `<${types.page} href="/pages/${id}"${style}>${content}</${
+      return `<${types.page} href="/page?id=${id}"${style}>${content}</${
         types.page
       }>`;
     }
