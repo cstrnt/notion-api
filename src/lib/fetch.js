@@ -1,4 +1,4 @@
-const fetch = require('cross-fetch');
+const fetch = require('node-fetch');
 
 const BASEURL = 'https://www.notion.so/api/v3/';
 
