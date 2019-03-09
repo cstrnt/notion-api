@@ -1,9 +1,10 @@
 const SEPERATOR = `\n        `;
 const types = {
-  page: 'div',
+  page: 'a',
   text: 'p',
   header: 'h1',
   sub_header: 'h3',
+  sub_sub_header: 'h5',
   divider: 'hr',
   break: 'br',
   numbered_list: 'ol',
@@ -11,24 +12,32 @@ const types = {
 };
 
 function formatToHtml(ObjectToParse) {
-  let { type, properties } = ObjectToParse;
+  let { type, properties, format, id } = ObjectToParse;
+  const color = format && format.block_color;
   const content = properties && properties.title;
+  const style = color ? ` style="color:${color}"` : '';
+  console.log(type);
   if (!content && type !== 'divider') {
     type = 'break';
   }
   switch (types[type]) {
+    case types.page: {
+      return `<${types.page} href="/pages/${id}"${style}>${content}</${
+        types.page
+      }>`;
+    }
     case types.divider: {
-      return `<${types.divider} />`;
+      return `<${types.divider}${style}/>`;
     }
     case types.break: {
-      return `<${types.break} />`;
+      return `<${types.break}${style}/>`;
     }
     case types.numbered_list:
     case types.bulleted_list: {
-      return `    <li>${content}</li>`;
+      return `    <li${style}>${content}</li>`;
     }
     default: {
-      return `<${types[type]}>${content}</${types[type]}>`;
+      return `<${types[type]}${style}>${content}</${types[type]}>`;
     }
   }
 }

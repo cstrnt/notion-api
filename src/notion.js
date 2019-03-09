@@ -25,8 +25,8 @@ class Notion {
       const values = [];
       const entries = r.recordMap.block;
       Object.keys(entries).map(key => {
-        const { id, type, properties } = entries[key].value;
-        return values.push({ id, type, properties });
+        const { id, type, properties, format } = entries[key].value;
+        return values.push({ id, type, properties, format });
       });
       return values;
     });
