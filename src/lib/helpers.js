@@ -70,10 +70,9 @@ function formatList(ObjectList) {
 function toHTMLPage(ObjectList) {
   const elementsString = formatList(ObjectList).join(SEPERATOR);
   return elementsString
-    ? `<html>
-    <body>${elementsString}
-    </body>
-</html>`
+    ? `<div>
+    ${elementsString}
+</div>`
     : null;
 }
 
