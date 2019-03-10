@@ -2,16 +2,23 @@
   "name": "notion-api-js",
   "version": "1.5.0",
   "description": "",
-  "repository": "/Frexeptabel/notion-api",
+  "repository": "https://github.com/Frexeptabel/notion-api/",
   "main": "src/notion.js",
   "scripts": {
     "start": "node index.js"
   },
+  "homepage": "https://github.com/Frexeptabel/notion-api/",
   "files": [
     "src/"
   ],
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "nodejs",
+    "notion",
+    "api",
+    "api-wrapper",
+    "api-client"
+  ],
+  "author": "Tim Raderschad",
   "license": "ISC",
   "dependencies": {
     "node-fetch": "^2.3.0"
