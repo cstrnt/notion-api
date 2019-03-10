@@ -11,19 +11,25 @@ const types = {
   bulleted_list: 'ul',
 };
 
-function formatToHtml(ObjectToParse) {
+function formatToHtml(ObjectToParse, options) {
+  // color.split('_')[0]
   let { type, properties, format, id } = ObjectToParse;
   const color = format && format.block_color;
+  const customColor =
+    color && options.colors && (options.colors[color.split('_')[0]] || color);
   const content = properties && properties.title;
-  const style = color ? ` style="color:${color}"` : '';
+  const property =
+    customColor && color.includes('background')
+      ? `style="background-color:${customColor.split('_')[0]}"`
+      : `style="color:${customColor}"`;
+  const style = color ? ` ${property}` : '';
   if (!content && type !== 'divider') {
     type = 'break';
   }
   switch (types[type]) {
     case types.page: {
-      return `<${types.page} href="/page?id=${id}"${style}>${content}</${
-        types.page
-      }>`;
+      return `<${types.page} href="${options.pageUrl ||
+        '/page?id='}${id}"${style}>${content}</${types.page}>`;
     }
     case types.divider: {
       return `<${types.divider}${style}/>`;
@@ -41,11 +47,11 @@ function formatToHtml(ObjectToParse) {
   }
 }
 
-function formatList(ObjectList) {
+function formatList(ObjectList, options) {
   const items = [];
   for (let index = 0; index < ObjectList.length; index += 1) {
     const element = ObjectList[index];
-    let html = formatToHtml(element);
+    let html = formatToHtml(element, options);
 
     if (element && element.type.includes('list')) {
       // If it the element is the first ul or ol element
@@ -67,8 +73,8 @@ function formatList(ObjectList) {
   return items;
 }
 
-function toHTMLPage(ObjectList) {
-  const elementsString = formatList(ObjectList).join(SEPERATOR);
+function toHTMLPage(ObjectList, options) {
+  const elementsString = formatList(ObjectList, options).join(SEPERATOR);
   return elementsString
     ? `<div>
     ${elementsString}

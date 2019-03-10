@@ -2,11 +2,19 @@ const fetch = require('./lib/fetch');
 const makeHTML = require('./lib/helpers');
 
 class Notion {
-  constructor({ userId, token }) {
+  constructor({
+    userId,
+    token,
+    options = {
+      colors: {},
+      pageUrl: '/page?id',
+    },
+  }) {
     this.creds = {
       userId,
       token,
     };
+    this.options = options;
   }
 
   getPages() {
@@ -28,7 +36,7 @@ class Notion {
         const { id, type, properties, format } = entries[key].value;
         return values.push({ id, type, properties, format });
       });
-      return makeHTML(values);
+      return makeHTML(values, this.options);
     });
   }
 
@@ -36,7 +44,9 @@ class Notion {
     const pages = [];
     return this.getPages().then(pageIds =>
       Promise.all(pageIds.map(id => this.getPageById(id)))
-        .then(a => a.map(element => pages.push(makeHTML(element))))
+        .then(a =>
+          a.map(element => pages.push(makeHTML(element, this.options)))
+        )
         .then(() => pages)
     );
   }
