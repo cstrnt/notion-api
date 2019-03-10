@@ -1,4 +1,7 @@
+// Seperator for good-looking HTML ;)
 const SEPERATOR = `\n        `;
+
+// HTML Tag types
 const types = {
   page: 'a',
   text: 'p',
@@ -11,21 +14,35 @@ const types = {
   bulleted_list: 'ul',
 };
 
+/**
+ * Method that parses a Notion-Object to HTML
+ * @param {*} ObjectToParse The Notion-Object
+ * @param {*} options Options for parsing
+ */
 function formatToHtml(ObjectToParse, options) {
-  // color.split('_')[0]
   let { type, properties, format, id } = ObjectToParse;
+  // Get color
   const color = format && format.block_color;
+  // Replace color with custom color if passed
   const customColor =
     color && options.colors && (options.colors[color.split('_')[0]] || color);
+  // Set content
   const content = properties && properties.title;
+
+  // Only set Style if passed
   const property =
     customColor && color.includes('background')
       ? `style="background-color:${customColor.split('_')[0]}"`
       : `style="color:${customColor}"`;
+
+  // Use ternary operator to return empty string instead of undefined
   const style = color ? ` ${property}` : '';
+
+  // Set type to break if no content is existant
   if (!content && type !== 'divider') {
     type = 'break';
   }
+  // Create HTML Tags with content
   switch (types[type]) {
     case types.page: {
       return `<${types.page} href="${options.pageUrl ||
@@ -47,6 +64,11 @@ function formatToHtml(ObjectToParse, options) {
   }
 }
 
+/**
+ * Formats a List of objects to HTML
+ * @param {*} ObjectList List of Notion-Objects
+ * @param {*} options Options for parsing
+ */
 function formatList(ObjectList, options) {
   const items = [];
   for (let index = 0; index < ObjectList.length; index += 1) {
@@ -73,6 +95,11 @@ function formatList(ObjectList, options) {
   return items;
 }
 
+/**
+ * Creates a HTML Page out of a List of Notion-Objects
+ * @param {*} ObjectList List of Notion-Objects
+ * @param {*} options Options for parsing
+ */
 function toHTMLPage(ObjectList, options) {
   const elementsString = formatList(ObjectList, options).join(SEPERATOR);
   return elementsString

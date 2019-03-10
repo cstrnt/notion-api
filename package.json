@@ -1,7 +1,8 @@
 {
-  "name": "notion-api-js",
+  "name": "notion-api",
   "version": "1.4.0",
   "description": "",
+  "repository": "/Frexeptabel/notion-api",
   "main": "src/notion.js",
   "scripts": {
     "start": "node index.js"

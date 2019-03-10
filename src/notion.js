@@ -7,7 +7,7 @@ class Notion {
     token,
     options = {
       colors: {},
-      pageUrl: '/page?id',
+      pageUrl: '/page?id=',
     },
   }) {
     this.creds = {
