@@ -42,8 +42,7 @@ import Notion from "notion-api-js";
 const Notion = require("notion-api.js");
 
 const notion = new Notion({
-  token: "YOUR_TOKEN_V2",
-  userId: "YOUR_USERID"
+  token: "YOUR_TOKEN_V2"
 });
 ```
 
@@ -52,7 +51,6 @@ You can also provide options for the HTML parsing.
 ```js
 const notion = new Notion({
   token: "YOUR_TOKEN_V2",
-  userId: "YOUR_USERID",
   options: {
     colors: {
       orange: 'CSS COLOR HERE'
@@ -118,8 +116,8 @@ By default it looks like this `/page?id=`, which results into `<a href="/page?id
 # Instance Methods
 
 - [getPages](<#getPages()>)
-- [getPageById]()
-- [getAllHTML]()
+- [getPageById](<#getPageById(pageId)>)
+- [getAllHTML](<#getAllHTML()>)
 
 ## getPages()
 
@@ -151,7 +149,7 @@ notion.getPageById("pageID").then(page => {
 });
 ```
 
-## getAllHTML()
+## getAllHTML() [WIP]
 
 Gets the HTML for all pages.
 

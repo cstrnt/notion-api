@@ -2,13 +2,12 @@ const Notion = require('./src/notion');
 
 const options = {
   token_v2: '',
-  userId: '',
 };
 
 const api = new Notion({
   token: options.token_v2,
-  userId: options.userId,
   options: {
+    pageUrl: '/posts/',
     colors: {
       red: 'tomato',
       blue: 'rgb(100, 149, 237)',
@@ -16,4 +15,5 @@ const api = new Notion({
     },
   },
 });
+
 // Use the api here

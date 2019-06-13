@@ -38,7 +38,7 @@ function formatToHtml(ObjectToParse, options) {
   // Use ternary operator to return empty string instead of undefined
   const style = color ? ` ${property}` : '';
 
-  // Set type to break if no content is existant
+  // Set type to break if no content is existent
   if (!content && type !== 'divider') {
     type = 'break';
   }
@@ -52,14 +52,16 @@ function formatToHtml(ObjectToParse, options) {
       return `<${types.divider}${style}/>`;
     }
     case types.break: {
-      return `<${types.break}${style}/>`;
+      return `<${types.break} />`;
     }
     case types.numbered_list:
     case types.bulleted_list: {
       return `    <li${style}>${content}</li>`;
     }
     default: {
-      return `<${types[type]}${style}>${content}</${types[type]}>`;
+      if (types[type])
+        return `<${types[type]}${style}>${content}</${types[type]}>`;
+      return null;
     }
   }
 }
@@ -74,8 +76,11 @@ function formatList(ObjectList, options) {
   for (let index = 0; index < ObjectList.length; index += 1) {
     const element = ObjectList[index];
     let html = formatToHtml(element, options);
-
-    if (element && element.type.includes('list')) {
+    if (
+      element &&
+      element.type.includes('list') &&
+      !element.type.includes('column')
+    ) {
       // If it the element is the first ul or ol element
       if (
         ObjectList[index - 1] &&
