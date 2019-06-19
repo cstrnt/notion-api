@@ -32,7 +32,7 @@ yarn add notion-api-js
 
 ## Creating an instance
 
-To create an instance, simply pass an Object with your notion `userId` and `and token_v2`.
+To create an instance, simply pass an Object with your notion `token_v2`.
 
 ```js
 // ES Modules syntax
@@ -76,7 +76,7 @@ You can read how to do it in your browser here:
 - [Chrome](https://developers.google.com/web/tools/chrome-devtools/manage-data/cookies)
 - [Firefox](https://developer.mozilla.org/en-US/docs/Tools/Storage_Inspector)
 
-After you found the Notion.so cookie, look for `token_v2` and `userId`. Those are the necessary credentials for the `Notion` instance. Simply copy them when you create the instance
+After you found the Notion.so cookie, look for `token_v2`. It is the necessary credential for the `Notion` instance. Simply copy them when you create the instance
 
 # Instance Options
 
