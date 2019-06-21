@@ -27,7 +27,7 @@ class Notion {
         return fetch_1.default({ endpoint: 'loadUserContent', creds: this.creds })
             .then((r) => {
             const pages = r.recordMap.block;
-            return Object.keys(pages || {});
+            return Object.keys(pages);
         })
             .catch((e) => {
             console.log(e);
@@ -48,7 +48,10 @@ class Notion {
             });
             return helpers_1.default(values, this.options);
         })
-            .catch(e => console.log(e));
+            .catch((e) => {
+            console.log(e);
+            return '';
+        });
     }
     getAllHTML() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -58,7 +61,7 @@ class Notion {
                 return elems;
             }
             catch (error) {
-                return '';
+                return [];
             }
         });
     }

@@ -39,11 +39,11 @@ class Notion {
     return notionFetch({ endpoint: 'loadUserContent', creds: this.creds })
       .then((r: NotionResponse) => {
         const pages = r.recordMap.block;
-        return Object.keys(pages || {});
+        return Object.keys(pages);
       })
       .catch((e: Error) => {
         console.log(e);
-        return [];
+        return [] as Array<string>;
       });
   }
 
@@ -65,7 +65,10 @@ class Notion {
         });
         return makeHTML(values, this.options);
       })
-      .catch(e => console.log(e));
+      .catch((e: Error) => {
+        console.log(e);
+        return '';
+      });
   }
 
   /**
@@ -77,7 +80,7 @@ class Notion {
       const elems = await Promise.all(pageIds.map(id => this.getPageById(id)));
       return elems;
     } catch (error) {
-      return '';
+      return [];
     }
   }
 }

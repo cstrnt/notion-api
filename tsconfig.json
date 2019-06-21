@@ -18,8 +18,9 @@
     "allowSyntheticDefaultImports": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "declaration": true,
     "baseUrl": "."
   },
   "exclude": ["node_modules"],
-  "include": ["./src/**/*.tsx", "./src/**/*.ts", "./*.ts"]
+  "include": ["./src/**/*.tsx", "./src/**/*.ts"]
 }

@@ -75,6 +75,6 @@ function toHTMLPage(ObjectList, options) {
         ? `<div>
     ${elementsString}
 </div>`
-        : null;
+        : '';
 }
 exports.default = toHTMLPage;

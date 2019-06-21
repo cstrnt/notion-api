@@ -115,7 +115,7 @@ function toHTMLPage(ObjectList: Array<NotionObject>, options: Options) {
     ? `<div>
     ${elementsString}
 </div>`
-    : null;
+    : '';
 }
 
 export default toHTMLPage;
