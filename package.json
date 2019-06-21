@@ -6,11 +6,11 @@
   "main": "src/notion.js",
   "scripts": {
     "build": "tsc",
-    "start": "node index.js"
+    "start": "node dist/index.js"
   },
   "homepage": "https://github.com/Frexeptabel/notion-api/",
   "files": [
-    "src/"
+    "dist/"
   ],
   "keywords": [
     "nodejs",
@@ -22,6 +22,7 @@
   "author": "Tim Raderschad",
   "license": "ISC",
   "dependencies": {
+    "@types/node": "^12.0.8",
     "node-fetch": "^2.3.0"
   },
   "devDependencies": {

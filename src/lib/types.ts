@@ -1,6 +1,15 @@
-export type ObjectToParse = {
+export type NotionObject = {
   id: string;
-  type: string;
+  type:
+    | 'page'
+    | 'text'
+    | 'header'
+    | 'sub_header'
+    | 'sub_sub_header'
+    | 'divider'
+    | 'break'
+    | 'numbered_list'
+    | 'bulleted_list';
   properties: {
     title: Array<Array<String>>;
   };
@@ -16,7 +25,7 @@ export type NotionResponse = {
   recordMap: {
     block: {
       id: {
-        value: ObjectToParse;
+        value: NotionObject;
       };
     };
   };

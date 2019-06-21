@@ -1,13 +1,13 @@
-import notionFetch from "./lib/fetch";
-import makeHTML from "./lib/helpers";
-import { NotionResponse } from "./lib/types";
+import notionFetch from './lib/fetch';
+import makeHTML from './lib/helpers';
+import { NotionResponse, Options } from './lib/types';
 
 /**
  * The Notion API Wrapper Class
  */
 class Notion {
   creds: { token: string };
-  options: { colors: Object; pageUrl: string };
+  options: Options;
   /**
    * Creates a new Notion API Wrapper instance
    * if no token is provided it will look for the ENV Variable NOTION_TOKEN
@@ -17,15 +17,15 @@ class Notion {
     token,
     options = {
       colors: {},
-      pageUrl: "/page?id="
+      pageUrl: '/page?id='
     }
   }: {
     token: string;
-    options: { colors: Object; pageUrl: string };
+    options: Options;
   }) {
     const notionToken = token || process.env.NOTION_TOKEN;
     if (!notionToken)
-      throw new Error("You need to provide the token to use the API");
+      throw new Error('You need to provide the token to use the API');
     this.creds = {
       token: notionToken
     };
@@ -36,12 +36,15 @@ class Notion {
    * Gets all PageIds from the user
    */
   getPages() {
-    return notionFetch({ endpoint: "loadUserContent", creds: this.creds })
+    return notionFetch({ endpoint: 'loadUserContent', creds: this.creds })
       .then((r: NotionResponse) => {
         const pages = r.recordMap.block;
         return Object.keys(pages || {});
       })
-      .catch((e: Error) => console.log(e));
+      .catch((e: Error) => {
+        console.log(e);
+        return [];
+      });
   }
 
   /**
@@ -50,7 +53,7 @@ class Notion {
    */
   getPageById(pageId: string) {
     return notionFetch({
-      endpoint: "loadPageChunk",
+      endpoint: 'loadPageChunk',
       creds: this.creds,
       body: { pageId }
     })
@@ -72,11 +75,10 @@ class Notion {
     try {
       const pageIds = (await this.getPages()) as Array<string>;
       const elems = await Promise.all(pageIds.map(id => this.getPageById(id)));
-      return elems.map(element => makeHTML(element, this.options));
+      return elems;
     } catch (error) {
-      return "";
-      console.log(error);
+      return '';
     }
   }
 }
-module.exports = Notion;
+export default Notion;

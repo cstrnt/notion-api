@@ -3,7 +3,7 @@
     "target": "es6",
     "module": "commonjs",
     "lib": ["dom", "es6", "es2017", "esnext.asynciterable"],
-    "sourceMap": true,
+    "sourceMap": false,
     "outDir": "./dist",
     "moduleResolution": "node",
     "removeComments": true,
