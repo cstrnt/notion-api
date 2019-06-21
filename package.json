@@ -1,15 +1,18 @@
 {
   "name": "notion-api-js",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "",
   "repository": "https://github.com/Frexeptabel/notion-api/",
-  "main": "src/notion.js",
+  "main": "dist/notion.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "start": "node index.js"
+    "prepublish": "npm run build",
+    "build": "tsc",
+    "start": "node dist/index.js"
   },
   "homepage": "https://github.com/Frexeptabel/notion-api/",
   "files": [
-    "src/"
+    "dist/"
   ],
   "keywords": [
     "nodejs",
@@ -21,6 +24,11 @@
   "author": "Tim Raderschad",
   "license": "ISC",
   "dependencies": {
+    "@types/node": "^12.0.8",
     "node-fetch": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/node-fetch": "^2.3.7",
+    "typescript": "^3.5.2"
   }
 }

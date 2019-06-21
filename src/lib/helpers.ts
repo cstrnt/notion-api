@@ -1,3 +1,5 @@
+import { NotionObject, Options } from './types';
+
 // Seperator for good-looking HTML ;)
 const SEPERATOR = `\n        `;
 
@@ -11,7 +13,7 @@ const types = {
   divider: 'hr',
   break: 'br',
   numbered_list: 'ol',
-  bulleted_list: 'ul',
+  bulleted_list: 'ul'
 };
 
 /**
@@ -19,13 +21,15 @@ const types = {
  * @param {*} ObjectToParse The Notion-Object
  * @param {*} options Options for parsing
  */
-function formatToHtml(ObjectToParse, options) {
+function formatToHtml(ObjectToParse: NotionObject, options: Options) {
   let { type, properties, format, id } = ObjectToParse;
   // Get color
   const color = format && format.block_color;
   // Replace color with custom color if passed
   const customColor =
-    color && options.colors && (options.colors[color.split('_')[0]] || color);
+    color &&
+    options.colors &&
+    ((options.colors as any)[color.split('_')[0]] || color);
   // Set content
   const content = properties && properties.title;
 
@@ -71,7 +75,7 @@ function formatToHtml(ObjectToParse, options) {
  * @param {*} ObjectList List of Notion-Objects
  * @param {*} options Options for parsing
  */
-function formatList(ObjectList, options) {
+function formatList(ObjectList: Array<NotionObject>, options: Options) {
   const items = [];
   for (let index = 0; index < ObjectList.length; index += 1) {
     const element = ObjectList[index];
@@ -105,13 +109,13 @@ function formatList(ObjectList, options) {
  * @param {*} ObjectList List of Notion-Objects
  * @param {*} options Options for parsing
  */
-function toHTMLPage(ObjectList, options) {
+function toHTMLPage(ObjectList: Array<NotionObject>, options: Options) {
   const elementsString = formatList(ObjectList, options).join(SEPERATOR);
   return elementsString
     ? `<div>
     ${elementsString}
 </div>`
-    : null;
+    : '';
 }
 
-module.exports = toHTMLPage;
+export default toHTMLPage;
