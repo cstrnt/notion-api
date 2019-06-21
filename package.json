@@ -5,6 +5,7 @@
   "repository": "https://github.com/Frexeptabel/notion-api/",
   "main": "src/notion.js",
   "scripts": {
+    "build": "tsc",
     "start": "node index.js"
   },
   "homepage": "https://github.com/Frexeptabel/notion-api/",
@@ -22,5 +23,9 @@
   "license": "ISC",
   "dependencies": {
     "node-fetch": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/node-fetch": "^2.3.7",
+    "typescript": "^3.5.2"
   }
 }

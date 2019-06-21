@@ -1,17 +1,18 @@
+import { ObjectToParse, Options } from "./types";
 // Seperator for good-looking HTML ;)
 const SEPERATOR = `\n        `;
 
 // HTML Tag types
 const types = {
-  page: 'a',
-  text: 'p',
-  header: 'h1',
-  sub_header: 'h3',
-  sub_sub_header: 'h5',
-  divider: 'hr',
-  break: 'br',
-  numbered_list: 'ol',
-  bulleted_list: 'ul',
+  page: "a",
+  text: "p",
+  header: "h1",
+  sub_header: "h3",
+  sub_sub_header: "h5",
+  divider: "hr",
+  break: "br",
+  numbered_list: "ol",
+  bulleted_list: "ul"
 };
 
 /**
@@ -19,34 +20,36 @@ const types = {
  * @param {*} ObjectToParse The Notion-Object
  * @param {*} options Options for parsing
  */
-function formatToHtml(ObjectToParse, options) {
-  let { type, properties, format, id } = ObjectToParse;
+function formatToHtml(ObjectToParse: ObjectToParse, options: Options) {
+  let { type, properties, format, id } = ObjectToParse;Ì
   // Get color
   const color = format && format.block_color;
   // Replace color with custom color if passed
   const customColor =
-    color && options.colors && (options.colors[color.split('_')[0]] || color);
+    color &&
+    options.colors &&
+    ((options.colors as any)[color.split("_")[0]] || color);
   // Set content
   const content = properties && properties.title;
 
   // Only set Style if passed
   const property =
-    customColor && color.includes('background')
-      ? `style="background-color:${customColor.split('_')[0]}"`
+    customColor && color.includes("background")
+      ? `style="background-color:${customColor.split("_")[0]}"`
       : `style="color:${customColor}"`;
 
   // Use ternary operator to return empty string instead of undefined
-  const style = color ? ` ${property}` : '';
+  const style = color ? ` ${property}` : "";
 
   // Set type to break if no content is existent
-  if (!content && type !== 'divider') {
-    type = 'break';
+  if (!content && type !== "divider") {
+    type = "break";
   }
   // Create HTML Tags with content
   switch (types[type]) {
     case types.page: {
       return `<${types.page} href="${options.pageUrl ||
-        '/page?id='}${id}"${style}>${content}</${types.page}>`;
+        "/page?id="}${id}"${style}>${content}</${types.page}>`;
     }
     case types.divider: {
       return `<${types.divider}${style}/>`;
@@ -78,19 +81,19 @@ function formatList(ObjectList, options) {
     let html = formatToHtml(element, options);
     if (
       element &&
-      element.type.includes('list') &&
-      !element.type.includes('column')
+      element.type.includes("list") &&
+      !element.type.includes("column")
     ) {
       // If it the element is the first ul or ol element
       if (
         ObjectList[index - 1] &&
-        !ObjectList[index - 1].type.includes('list')
+        !ObjectList[index - 1].type.includes("list")
       ) {
         html = `<${types[element.type]}>${SEPERATOR}${html}`;
       }
       if (
         index + 1 >= ObjectList.length ||
-        (ObjectList[index + 1] && !ObjectList[index + 1].type.includes('list'))
+        (ObjectList[index + 1] && !ObjectList[index + 1].type.includes("list"))
       ) {
         html = `${html}${SEPERATOR}</${types[element.type]}>`;
       }
@@ -114,4 +117,4 @@ function toHTMLPage(ObjectList, options) {
     : null;
 }
 
-module.exports = toHTMLPage;
+export default toHTMLPage;

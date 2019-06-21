@@ -106,7 +106,6 @@ Possible colors are:
 - blue
 - purple
 - pink
-- red
 
 ### PageUrl (String)
 
