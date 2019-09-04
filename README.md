@@ -39,7 +39,7 @@ To create an instance, simply pass an Object with your notion `token_v2`.
 import Notion from "notion-api-js";
 
 // require syntax
-const Notion = require("notion-api-js");
+const Notion = require("notion-api-js").default;
 
 const notion = new Notion({
   token: "YOUR_TOKEN_V2"
