@@ -1,6 +1,7 @@
 import notionFetch from './lib/fetch';
-import makeHTML from './lib/helpers';
-import { NotionResponse, Options } from './lib/types';
+import makeHTML, { handleNotionError } from './lib/helpers';
+import { NotionResponse, Options, PageDTO } from './lib/types';
+import * as process from 'process';
 
 /**
  * The Notion API Wrapper Class
@@ -42,7 +43,7 @@ class Notion {
         return Object.keys(pages);
       })
       .catch((e: Error) => {
-        console.log(e);
+        handleNotionError(e);
         return [] as Array<string>;
       });
   }
@@ -65,9 +66,35 @@ class Notion {
         });
         return makeHTML(values, this.options);
       })
+      .catch(
+        (e: Error): PageDTO => {
+          handleNotionError(e);
+          return {};
+        }
+      );
+  }
+
+  /**
+   * Method to getAll Pages with metadata starting from the entrypoint.
+   * @param startingPageId The ID of the page where your blog home is. Acts as a starting point
+   */
+  async getPagesByIndexId(startingPageId: string) {
+    return notionFetch({
+      endpoint: 'loadPageChunk',
+      creds: this.creds,
+      body: { pageId: startingPageId }
+    })
+      .then(async (r: NotionResponse) => {
+        const entries = Object.values(r.recordMap.block).filter(
+          ({ value }) => value.type === 'page'
+        );
+        return await Promise.all(
+          entries.map(({ value }) => this.getPageById(value.id))
+        );
+      })
       .catch((e: Error) => {
-        console.log(e);
-        return '';
+        handleNotionError(e);
+        return [] as Array<PageDTO>;
       });
   }
 
@@ -80,6 +107,7 @@ class Notion {
       const elems = await Promise.all(pageIds.map(id => this.getPageById(id)));
       return elems;
     } catch (error) {
+      handleNotionError(error);
       return [];
     }
   }

@@ -11,7 +11,7 @@ export type NotionObject = {
     | 'numbered_list'
     | 'bulleted_list';
   properties: {
-    title: Array<Array<String>>;
+    title: Array<Array<string>>;
   };
   format: {
     page_icon: string;
@@ -43,3 +43,12 @@ export type Options = {
     pink?: string;
   };
 };
+
+export interface Attributes {
+  [key: string]: string | null;
+}
+
+export interface PageDTO {
+  HTML?: string;
+  Attributes?: Attributes;
+}

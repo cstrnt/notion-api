@@ -116,6 +116,7 @@ By default it looks like this `/page?id=`, which results into `<a href="/page?id
 
 - [getPages](<#getPages()>)
 - [getPageById](<#getPageById(pageId)>)
+- [getPagesByIndexId](<#getPagesByIndexId(pageId)>)
 - [getAllHTML](<#getAllHTML()>)
 
 ## getPages()
@@ -144,6 +145,24 @@ Gets a Notion page by the pageId and returns it parsed to HTML.
 
 ```js
 notion.getPageById("pageID").then(page => {
+  // Your Code here
+});
+```
+
+## getPagesByIndexId(pageId)
+
+Gets a Notion page by the given Id and all subpages of that page. Useful if you want to use a homepage.
+
+**Parameters**:
+
+| **Parameter** | **Type** | **Opt/Required** |
+| ------------- | -------- | ---------------- |
+| pageId        | string   | Required         |
+
+**Example**
+
+```js
+notion.getPagesByIndexId("pageID").then(page => {
   // Your Code here
 });
 ```
