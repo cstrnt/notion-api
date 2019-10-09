@@ -1,7 +1,8 @@
-import { NotionObject, Options } from './types';
+import { NotionObject, Options, Attributes, PageDTO } from './types';
+import slugify from 'slugify';
 
 // Seperator for good-looking HTML ;)
-const SEPERATOR = `\n        `;
+const SEPERATOR = '';
 
 // HTML Tag types
 const types = {
@@ -32,6 +33,15 @@ function formatToHtml(ObjectToParse: NotionObject, options: Options) {
     ((options.colors as any)[color.split('_')[0]] || color);
   // Set content
   const content = properties && properties.title;
+  const tags = (content && content[0] ? content[0][0] : '').match(
+    /\[.{1,}\]: .{1,}/
+  );
+  const attrib = tags && tags[0].replace(/(\[|\])/g, '').split(':');
+  if (attrib && attrib.length == 2) {
+    return {
+      [attrib[0]]: attrib[1].trim()
+    };
+  }
 
   // Only set Style if passed
   const property =
@@ -60,7 +70,7 @@ function formatToHtml(ObjectToParse: NotionObject, options: Options) {
     }
     case types.numbered_list:
     case types.bulleted_list: {
-      return `    <li${style}>${content}</li>`;
+      return `<li${style}>${content}</li>`;
     }
     default: {
       if (types[type])
@@ -77,10 +87,16 @@ function formatToHtml(ObjectToParse: NotionObject, options: Options) {
  */
 function formatList(ObjectList: Array<NotionObject>, options: Options) {
   const items = [];
+  const attributes: Attributes = {};
   for (let index = 0; index < ObjectList.length; index += 1) {
     const element = ObjectList[index];
     let html = formatToHtml(element, options);
-    if (
+    if (typeof html === 'object') {
+      const keys = Object.keys(html as Attributes);
+      keys.forEach(key => {
+        attributes[key] = (html as Attributes)[key];
+      });
+    } else if (
       element &&
       element.type.includes('list') &&
       !element.type.includes('column')
@@ -99,9 +115,34 @@ function formatList(ObjectList: Array<NotionObject>, options: Options) {
         html = `${html}${SEPERATOR}</${types[element.type]}>`;
       }
     }
-    items.push(html);
+    if (typeof html === 'string') {
+      items.push(html);
+    }
   }
-  return items;
+  const { format, properties } = ObjectList[0];
+  const title = properties.title[0][0];
+  const cover =
+    format && format.page_cover
+      ? format.page_cover.includes('http')
+        ? format.page_cover
+        : `https://www.notion.so${format.page_cover}`
+      : null;
+  return {
+    items,
+    attributes: {
+      ...attributes,
+      title,
+      slug: slugify(title, { lower: true }),
+      cover,
+      teaser: items
+        .join('')
+        .replace(/\<a.*\>*\<\/a\>/g, '')
+        .replace(/<[^>]*>/g, '')
+        .trim()
+        .substring(0, 200),
+      icon: format ? format.page_icon : null
+    }
+  };
 }
 
 /**
@@ -109,13 +150,31 @@ function formatList(ObjectList: Array<NotionObject>, options: Options) {
  * @param {*} ObjectList List of Notion-Objects
  * @param {*} options Options for parsing
  */
-function toHTMLPage(ObjectList: Array<NotionObject>, options: Options) {
-  const elementsString = formatList(ObjectList, options).join(SEPERATOR);
-  return elementsString
-    ? `<div>
-    ${elementsString}
-</div>`
-    : '';
+function toHTMLPage(
+  ObjectList: Array<NotionObject>,
+  options: Options
+): PageDTO {
+  const { items, attributes } = formatList(ObjectList, options);
+  const elementsString = items.join('');
+  return {
+    HTML: elementsString ? `<div>${elementsString}</div>` : '',
+    Attributes: { ...attributes, id: ObjectList[0].id }
+  };
+}
+
+export function handleNotionError(err: Error) {
+  if (err.message.includes('block')) {
+    console.error('Authentication Error: Please check your token!');
+  } else {
+    console.error(err);
+  }
+}
+
+export function isNotionID(id: string) {
+  const idRegex = new RegExp(
+    /[a-z,0-9]{8}-[a-z,0-9]{4}-[a-z,0-9]{4}-[a-z,0-9]{4}-[a-z,0-9]{12}/g
+  );
+  return idRegex.test(id);
 }
 
 export default toHTMLPage;
