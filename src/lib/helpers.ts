@@ -36,7 +36,10 @@ function formatToHtml(
     options.colors &&
     ((options.colors as any)[color.split('_')[0]] || color);
   // Set content
-  const content = properties && properties.title;
+  const content =
+    properties &&
+    properties.title &&
+    properties.title[0][0].replace(/\[.*\]:.{1,}/, '');
   const tags = (content && content[0] ? content[0][0] : '').match(
     /\[.{1,}\]: .{1,}/
   );
@@ -64,7 +67,7 @@ function formatToHtml(
   switch (types[type]) {
     case types.page: {
       if (index === 0) {
-        return `<h1${style}>${content}</h1>`;
+        return `<h1 ${style}>${content}</h1>`;
       }
       return null;
     }
@@ -97,7 +100,7 @@ function formatList(ObjectList: Array<NotionObject>, options: Options) {
   for (let index = 0; index < ObjectList.length; index += 1) {
     const element = ObjectList[index];
     let html = formatToHtml(element, options, index);
-    if (typeof html === 'object') {
+    if (html && typeof html === 'object') {
       const keys = Object.keys(html as Attributes);
       keys.forEach(key => {
         attributes[key] = (html as Attributes)[key];
@@ -126,7 +129,7 @@ function formatList(ObjectList: Array<NotionObject>, options: Options) {
     }
   }
   const { format, properties } = ObjectList[0];
-  const title = properties.title[0][0];
+  const title = (properties && properties.title[0][0]) || '';
   const cover =
     format && format.page_cover
       ? format.page_cover.includes('http')
@@ -141,9 +144,14 @@ function formatList(ObjectList: Array<NotionObject>, options: Options) {
       slug: slugify(title, { lower: true }),
       cover,
       teaser: items
-        .join('')
-        .replace(/\<a.*\>*\<\/a\>/g, '')
-        .replace(/<[^>]*>/g, '')
+        .map(i =>
+          i
+            .replace(/\[.{1,}\]: .{1,}/g, '')
+            .replace(/\<a.*\>*\<\/a\>/g, '')
+            .replace(/<[^>]*>/g, '')
+        )
+        .filter(i => i)
+        .join(' ')
         .trim()
         .substring(0, 200),
       icon: format ? format.page_icon : null
