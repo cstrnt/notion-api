@@ -22,8 +22,12 @@ const types = {
  * @param {*} ObjectToParse The Notion-Object
  * @param {*} options Options for parsing
  */
-function formatToHtml(ObjectToParse: NotionObject, options: Options) {
-  let { type, properties, format, id } = ObjectToParse;
+function formatToHtml(
+  ObjectToParse: NotionObject,
+  options: Options,
+  index: number
+) {
+  let { type, properties, format } = ObjectToParse;
   // Get color
   const color = format && format.block_color;
   // Replace color with custom color if passed
@@ -59,8 +63,10 @@ function formatToHtml(ObjectToParse: NotionObject, options: Options) {
   // Create HTML Tags with content
   switch (types[type]) {
     case types.page: {
-      return `<${types.page} href="${options.pageUrl ||
-        '/page?id='}${id}"${style}>${content}</${types.page}>`;
+      if (index === 0) {
+        return `<h1${style}>${content}</h1>`;
+      }
+      return null;
     }
     case types.divider: {
       return `<${types.divider}${style}/>`;
@@ -90,7 +96,7 @@ function formatList(ObjectList: Array<NotionObject>, options: Options) {
   const attributes: Attributes = {};
   for (let index = 0; index < ObjectList.length; index += 1) {
     const element = ObjectList[index];
-    let html = formatToHtml(element, options);
+    let html = formatToHtml(element, options, index);
     if (typeof html === 'object') {
       const keys = Object.keys(html as Attributes);
       keys.forEach(key => {
