@@ -54,11 +54,13 @@ class Notion {
    */
   getPageById(
     pageId: string,
-    htmlFormatter?: formatter) {
+    htmlFormatter?: formatter,
+    limit?: number,
+    ) {
     return notionFetch({
       endpoint: 'loadPageChunk',
       creds: this.creds,
-      body: { pageId }
+      body: { pageId, limit }
     })
       .then((r: NotionResponse) => {
         const entries = r.recordMap.block;
