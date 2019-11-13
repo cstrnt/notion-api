@@ -11,6 +11,7 @@ const getAllBlocks = async ({
   chunkNumber,
   res,
   resolve,
+  reject,
   body,
 } : {
   url: string,
@@ -19,7 +20,8 @@ const getAllBlocks = async ({
   stack: Array<any>,
   chunkNumber: number,
   res: { recordMap: {block: object } },
-  resolve: Function
+  resolve: Function,
+  reject: Function,
   body?: object,
 }) => {
   return fetch(url, {
@@ -53,9 +55,13 @@ const getAllBlocks = async ({
             }
           },
           resolve,
+          reject,
           body
         })
       } else {
+        if (r.errorId) {
+          reject(r);
+        }
         const ret: NotionResponse = {
           recordMap: {
             block: {
@@ -79,7 +85,7 @@ function request({
   creds: { token: string };
   body?: { limit?: number, pageId: string };
 }): Promise<NotionResponse> {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     getAllBlocks({
       url: `${BASEURL}${endpoint}`,
       token,
@@ -90,6 +96,7 @@ function request({
         recordMap: { block: {} }
       },
       resolve,
+      reject,
       body
     })
   });

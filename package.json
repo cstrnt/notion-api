@@ -1,6 +1,6 @@
 {
   "name": "notion-api-js",
-  "version": "2.3.3",
+  "version": "2.3.4",
   "description": "",
   "repository": "https://github.com/Frexeptabel/notion-api/",
   "main": "dist/notion.js",
