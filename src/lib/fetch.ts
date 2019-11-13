@@ -60,7 +60,7 @@ const getAllBlocks = async ({
           recordMap: {
             block: {
               ...res.recordMap.block,
-              ...r.recordMap.block,
+              ...(r.recordMap || {}).block,
             }
           }
         };
