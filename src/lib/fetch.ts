@@ -40,7 +40,7 @@ const getAllBlocks = async ({
   })
     .then(response => response.json())
     .then(r => {
-      if (r.cursor.stack.length) {
+      if (((r.cursor || {}).stack || {}).length) {
         getAllBlocks({
           url,token,limit, stack: r.cursor.stack,
           chunkNumber: chunkNumber + 1,
