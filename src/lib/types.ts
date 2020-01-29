@@ -11,7 +11,8 @@ export type NotionObject = {
     | 'numbered_list'
     | 'bulleted_list';
   properties: {
-    title: Array<Array<string>>;
+    source?: Array<Array<string>>;
+    title?: Array<Array<string>>;
   };
   format: {
     page_icon: string;

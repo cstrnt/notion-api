@@ -14,7 +14,8 @@ const types = {
   divider: 'hr',
   break: 'br',
   numbered_list: 'ol',
-  bulleted_list: 'ul'
+  bulleted_list: 'ul',
+  image: 'img'
 };
 
 /**
@@ -40,6 +41,9 @@ function formatToHtml(
     properties &&
     properties.title &&
     properties.title[0][0].replace(/\[.*\]:.{1,}/, '');
+  const source =
+    properties &&
+    properties.source;
   const tags = (content && content[0] ? content[0][0] : '').match(
     /\[.{1,}\]: .{1,}/
   );
@@ -60,7 +64,7 @@ function formatToHtml(
   const style = color ? ` ${property}` : '';
 
   // Set type to break if no content is existent
-  if (!content && type !== 'divider') {
+  if (!content && type !== 'divider' && !source) {
     type = 'break';
   }
   // Create HTML Tags with content
@@ -80,6 +84,9 @@ function formatToHtml(
     case types.numbered_list:
     case types.bulleted_list: {
       return `<li${style}>${content}</li>`;
+    }
+    case types.image: {
+      return `<${types.image}${style} src="${source}" />`;
     }
     default: {
       if (types[type])
@@ -129,7 +136,7 @@ function formatList(ObjectList: Array<NotionObject>, options: Options) {
     }
   }
   const { format, properties } = ObjectList[0];
-  const title = (properties && properties.title[0][0]) || '';
+  const title = (properties && properties.title && properties.title[0][0]) || '';
   const cover =
     format && format.page_cover
       ? format.page_cover.includes('http')
