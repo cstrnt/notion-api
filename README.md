@@ -5,7 +5,7 @@
 
 This repository contains an unofficial port of the [Notion](https://notion.so) API to Node.js. **Important**: It only works in the backend using Node.js and not in a client-side environment.
 
-**IMPORTANT**: You need a token to use the Notion API. You can obtain them by reading your local cookie. You can find instructions for that below.
+**IMPORTANT**: You need a token to use the Notion API. You can obtain one by reading your local cookie. You can find instructions for that below.
 
 # Documentation
 
@@ -18,7 +18,7 @@ This repository contains an unofficial port of the [Notion](https://notion.so) A
 
 # Installation
 
-You can either use npm or yarn to install it:
+You can either use `npm ` or `yarn ` to install it:
 
 ```
 npm i --save notion-api-js
@@ -76,7 +76,7 @@ You can read how to do it in your browser here:
 - [Chrome](https://developers.google.com/web/tools/chrome-devtools/manage-data/cookies)
 - [Firefox](https://developer.mozilla.org/en-US/docs/Tools/Storage_Inspector)
 
-After you found the Notion.so cookie, look for an entry called `token_v2`. It is the necessary credential for the `Notion` instance. Simply copy them when you create the instance.
+After you found the Notion.so cookie, look for an entry called `token_v2`. It is the necessary credential for the `Notion` instance. Simply copy it into your code when you create the instance.
 
 # Instance Options
 
