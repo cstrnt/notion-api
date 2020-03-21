@@ -1,11 +1,11 @@
-# Unofficial Notion.so Wrapper (WIP)
+# Unofficial Notion.so API Wrapper (WIP)
 
 ![npm](https://img.shields.io/npm/v/notion-api-js.svg)
 ![npm bundle size](https://img.shields.io/bundlephobia/min/notion-api-js.svg)
 
-This Repository contains an unofficial port of the [Notion](https://notion.so) to Node.js. **Important**: It only works using Node.js in backend and not in a client-side environment.
+This repository contains an unofficial port of the [Notion](https://notion.so) API to Node.js. **Important**: It only works in the backend using Node.js and not in a client-side environment.
 
-**IMPORTANT**: You need a token to use the Notion API. You can obtain them by reading you local cookie. You can find instructions for that
+**IMPORTANT**: You need a token to use the Notion API. You can obtain them by reading your local cookie. You can find instructions for that below.
 
 # Documentation
 
@@ -32,7 +32,7 @@ yarn add notion-api-js
 
 ## Creating an instance
 
-To create an instance, simply pass an Object with your notion `token_v2`.
+To create an instance, simply pass an object with the token you read from the cookie:
 
 ```js
 // ES Modules syntax
@@ -46,7 +46,7 @@ const notion = new Notion({
 });
 ```
 
-You can also provide options for the HTML parsing.
+You can also provide options for the HTML parsing:
 
 ```js
 const notion = new Notion({
@@ -62,11 +62,11 @@ const notion = new Notion({
 
 # Obtaining Credentials
 
-Right now there is no official way how to access the Notion API, but there is a little work-around to get your credentials.
+Right now there is no official way of accessing the Notion API but there is a little work-around to get your credentials.
 
 ## Prerequisites
 
-You need to have an Account on Notion.so and need to be logged in.
+You need to have an account on [Notion.so](https://notion.so/) and need to be logged in.
 
 ## Getting your credentials
 
@@ -76,15 +76,15 @@ You can read how to do it in your browser here:
 - [Chrome](https://developers.google.com/web/tools/chrome-devtools/manage-data/cookies)
 - [Firefox](https://developer.mozilla.org/en-US/docs/Tools/Storage_Inspector)
 
-After you found the Notion.so cookie, look for `token_v2`. It is the necessary credential for the `Notion` instance. Simply copy them when you create the instance
+After you found the Notion.so cookie, look for an entry called `token_v2`. It is the necessary credential for the `Notion` instance. Simply copy them when you create the instance.
 
 # Instance Options
 
-The Options are optionally passed to the instance as a parameter. Those options contain information on how the HTML will be parsed and returned using the instance methods.
+The options are optionally passed to the instance as a parameter. Those options contain information on how the HTML will be parsed and returned using the instance methods.
 
 ### Colors (Object)
 
-Contains definitions for the colors. If this option is omitted the default html colors like orange, pink and blue are used. You can change this behaviour by passing an object containing colour definitions. Example:
+Contains definitions for the colors. If this option is omitted the default HTML colors like orange, pink and blue are used. You can change this behavior by passing an object containing color definitions. Example:
 
 ```js
 options: {
@@ -110,7 +110,7 @@ Possible colors are:
 ### PageUrl (String)
 
 The PageUrl is the string passed to the `<a>` tag and is used to build the href of it. The id is inserted after the passed string.
-By default it looks like this `/page?id=`, which results into `<a href="/page?id=SOME_ID">Hello World</a>`
+By default it looks like this `/page?id=`, which results in `<a href="/page?id=SOME_ID">Hello World</a>`
 
 # Instance Methods
 
@@ -121,7 +121,7 @@ By default it looks like this `/page?id=`, which results into `<a href="/page?id
 
 ## getPages()
 
-Gets all pages of the user by the userId passed to the Notion instance. All pages are parsed to HTML.
+Gets all pages of the user by the userId passed to the `Notion ` instance. All pages are parsed to HTML.
 
 **Example**
 
@@ -133,7 +133,7 @@ notion.getPages().then(pages => {
 
 ## getPageById(pageId)
 
-Gets a Notion page by the pageId and returns it parsed to HTML.
+Gets a Notion page by the pageId and returns the parsed HTML.
 
 **Parameters**:
 
@@ -144,14 +144,14 @@ Gets a Notion page by the pageId and returns it parsed to HTML.
 **Example**
 
 ```js
-notion.getPageById("pageID").then(page => {
-  // Your Code here
+notion.getPageById("pageId").then(page => {
+  // Your code here
 });
 ```
 
 ## getPagesByIndexId(pageId)
 
-Gets a Notion page by the given Id and all subpages of that page. Useful if you want to use a homepage.
+Gets a Notion page by the given pageId and all subpages of that page. Useful if you want to use a homepage.
 
 **Parameters**:
 
@@ -162,8 +162,8 @@ Gets a Notion page by the given Id and all subpages of that page. Useful if you 
 **Example**
 
 ```js
-notion.getPagesByIndexId("pageID").then(page => {
-  // Your Code here
+notion.getPagesByIndexId("pageId").then(page => {
+  // Your code here
 });
 ```
 
@@ -173,10 +173,10 @@ Gets the HTML for all pages.
 
 ```js
 notion.getAllHTML().then(html => {
-  // Your Code here
+  // Your Ccode here
 });
 ```
 
 # Disclaimer
 
-It's really WIP right now but I would highly appreciate if you would like to contribute to the project. Just fork this repo and create a PR 😄
+It's really WIP right now but I would highly appreciate if you would like to contribute to the project. Just fork this repository and create a PR 😄
