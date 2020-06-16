@@ -4,7 +4,7 @@
   "description": "",
   "repository": "https://github.com/Frexeptabel/notion-api/",
   "main": "dist/notion.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/notion.d.ts",
   "scripts": {
     "prepublish": "npm run build",
     "build": "tsc",
