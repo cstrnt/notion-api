@@ -1,4 +1,4 @@
-import { NotionObject, Options, Attributes, PageDTO } from './types';
+import { NotionObject, Options, Attributes, PageDTO, formatter, htmlResponse } from './types';
 import slugify from 'slugify';
 
 // Seperator for good-looking HTML ;)
@@ -93,13 +93,19 @@ function formatToHtml(
  * Formats a List of objects to HTML
  * @param {*} ObjectList List of Notion-Objects
  * @param {*} options Options for parsing
+ * @param {*} htmlFormatter html renderer
  */
-function formatList(ObjectList: Array<NotionObject>, options: Options) {
+function formatList(ObjectList: Array<NotionObject>, options: Options, htmlFormatter?: formatter) {
   const items = [];
   const attributes: Attributes = {};
   for (let index = 0; index < ObjectList.length; index += 1) {
     const element = ObjectList[index];
-    let html = formatToHtml(element, options, index);
+    let html: htmlResponse;
+    if (htmlFormatter) {
+       html = htmlFormatter(element, options, index, ObjectList);  
+    } else {
+      html = formatToHtml(element, options, index);
+    }
     if (html && typeof html === 'object') {
       const keys = Object.keys(html as Attributes);
       keys.forEach(key => {
@@ -163,12 +169,14 @@ function formatList(ObjectList: Array<NotionObject>, options: Options) {
  * Creates a HTML Page out of a List of Notion-Objects
  * @param {*} ObjectList List of Notion-Objects
  * @param {*} options Options for parsing
+ * @param {*} htmlFormatter html renderer
  */
 function toHTMLPage(
   ObjectList: Array<NotionObject>,
-  options: Options
+  options: Options,
+  htmlFormatter?: formatter
 ): PageDTO {
-  const { items, attributes } = formatList(ObjectList, options);
+  const { items, attributes } = formatList(ObjectList, options, htmlFormatter);
   const elementsString = items.join('');
   return {
     HTML: elementsString ? `<div>${elementsString}</div>` : '',

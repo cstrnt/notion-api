@@ -19,6 +19,7 @@ export type NotionObject = {
     page_cover_position: number;
     block_color: string;
   };
+  content: Array<string>;
 };
 
 export type NotionResponse = {
@@ -52,3 +53,7 @@ export interface PageDTO {
   HTML?: string;
   Attributes?: Attributes;
 }
+
+export type htmlResponse = string | { [x: string]: string; } | null;
+
+export type formatter = ((ObjectToParse: NotionObject, options: Options, index: number, ObjectList: Array<NotionObject>) => htmlResponse);

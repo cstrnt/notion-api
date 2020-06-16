@@ -1,6 +1,6 @@
 import notionFetch from './lib/fetch';
 import makeHTML, { handleNotionError } from './lib/helpers';
-import { NotionResponse, Options, PageDTO } from './lib/types';
+import { NotionResponse, Options, PageDTO, formatter } from './lib/types';
 import * as process from 'process';
 
 /**
@@ -52,19 +52,23 @@ class Notion {
    * Gets the content of a page by ID as HTML
    * @param {string} pageId The ID of the notion page
    */
-  getPageById(pageId: string) {
+  getPageById(
+    pageId: string,
+    htmlFormatter?: formatter,
+    limit?: number,
+    ) {
     return notionFetch({
       endpoint: 'loadPageChunk',
       creds: this.creds,
-      body: { pageId }
+      body: { pageId, limit }
     })
       .then((r: NotionResponse) => {
         const entries = r.recordMap.block;
         const values = Object.values(entries).map(value => {
-          const { id, type, properties, format } = value.value;
-          return { id, type, properties, format };
+          const { id, type, properties, format, content } = value.value;
+          return { id, type, properties, format, content };
         });
-        return makeHTML(values, this.options);
+        return makeHTML(values, this.options, htmlFormatter);
       })
       .catch(
         (e: Error): PageDTO => {
