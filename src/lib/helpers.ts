@@ -141,7 +141,9 @@ function formatList(ObjectList: Array<NotionObject>, options: Options, htmlForma
       items.push(html);
     }
   }
-  const { format, properties } = ObjectList[0];
+  const { format, created_time, last_edited_time, properties } = ObjectList[0];
+  const created_datetime = new Date(created_time).toDateString()
+  const last_edited_datetime = new Date(last_edited_time).toDateString()
   const title = (properties && properties.title && properties.title[0][0]) || '';
   const cover =
     format && format.page_cover
@@ -154,6 +156,8 @@ function formatList(ObjectList: Array<NotionObject>, options: Options, htmlForma
     attributes: {
       ...attributes,
       title,
+      created_datetime, 
+      last_edited_datetime,
       slug: slugify(title, { lower: true }),
       cover,
       teaser: items
