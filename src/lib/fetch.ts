@@ -32,10 +32,10 @@ const getAllBlocks = async ({
       cookie: `token_v2=${token};`
     },
     body: JSON.stringify({
-      limit,
       cursor: { stack },
       chunkNumber,
       ...body,
+      limit,
       verticalColumns: false
     }),
     method: "POST"
