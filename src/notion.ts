@@ -65,8 +65,8 @@ class Notion {
       .then((r: NotionResponse) => {
         const entries = r.recordMap.block;
         const values = Object.values(entries).map(value => {
-          const { id, type, properties, format, content } = value.value;
-          return { id, type, properties, format, content };
+          const { id, type, properties, format, content, created_time, last_edited_time } = value.value;
+          return { id, type, properties, format, content, created_time, last_edited_time };
         });
         return makeHTML(values, this.options, htmlFormatter);
       })

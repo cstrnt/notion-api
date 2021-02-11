@@ -21,6 +21,8 @@ export type NotionObject = {
     block_color: string;
   };
   content: Array<string>;
+  created_time: number;
+  last_edited_time: number
 };
 
 export type NotionResponse = {
