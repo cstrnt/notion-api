@@ -1,19 +1,54 @@
 {
-  "name": "notion-api-js",
-  "version": "2.4.0",
-  "description": "",
-  "repository": "https://github.com/Frexeptabel/notion-api/",
-  "main": "dist/notion.js",
-  "types": "dist/notion.d.ts",
-  "scripts": {
-    "prepublish": "npm run build",
-    "build": "tsc",
-    "start": "node dist/index.js"
-  },
-  "homepage": "https://github.com/Frexeptabel/notion-api/",
+  "version": "0.1.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "files": [
-    "dist/"
+    "dist",
+    "src"
   ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why"
+  },
+  "peerDependencies": {},
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "name": "notion-api-js",
+  "author": "Tim Raderschad",
+  "module": "dist/notion-api.esm.js",
+  "repository": "https://github.com/cstrnt/notion-api/",
+  "size-limit": [
+    {
+      "path": "dist/notion-api.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/notion-api.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "dependencies": {
+    "node-fetch": "^2.3.0",
+    "slugify": "^1.3.5"
+  },
   "keywords": [
     "nodejs",
     "notion",
@@ -21,15 +56,14 @@
     "api-wrapper",
     "api-client"
   ],
-  "author": "Tim Raderschad",
-  "license": "ISC",
-  "dependencies": {
-    "@types/node": "^12.0.8",
-    "node-fetch": "^2.3.0",
-    "slugify": "^1.3.5"
-  },
   "devDependencies": {
+    "@size-limit/preset-small-lib": "^4.9.2",
+    "@types/node": "^12.0.8",
     "@types/node-fetch": "^2.3.7",
-    "typescript": "^3.5.2"
+    "husky": "^5.0.9",
+    "size-limit": "^4.9.2",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.1.0",
+    "typescript": "^4.1.5"
   }
 }

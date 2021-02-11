@@ -7,8 +7,8 @@ import * as process from 'process';
  * The Notion API Wrapper Class
  */
 class Notion {
-  creds: { token: string };
-  options: Options;
+  private creds: { token: string };
+  private options: Options;
   /**
    * Creates a new Notion API Wrapper instance
    * if no token is provided it will look for the ENV Variable NOTION_TOKEN
@@ -18,8 +18,8 @@ class Notion {
     token,
     options = {
       colors: {},
-      pageUrl: '/page?id='
-    }
+      pageUrl: '/page?id=',
+    },
   }: {
     token: string;
     options: Options;
@@ -28,7 +28,7 @@ class Notion {
     if (!notionToken)
       throw new Error('You need to provide the token to use the API');
     this.creds = {
-      token: notionToken
+      token: notionToken,
     };
     this.options = options;
   }
@@ -52,21 +52,33 @@ class Notion {
    * Gets the content of a page by ID as HTML
    * @param {string} pageId The ID of the notion page
    */
-  getPageById(
-    pageId: string,
-    htmlFormatter?: formatter,
-    limit?: number,
-    ) {
+  getPageById(pageId: string, htmlFormatter?: formatter, limit?: number) {
     return notionFetch({
       endpoint: 'loadPageChunk',
       creds: this.creds,
-      body: { pageId, limit }
+      body: { pageId, limit },
     })
       .then((r: NotionResponse) => {
         const entries = r.recordMap.block;
         const values = Object.values(entries).map(value => {
-          const { id, type, properties, format, content, created_time, last_edited_time } = value.value;
-          return { id, type, properties, format, content, created_time, last_edited_time };
+          const {
+            id,
+            type,
+            properties,
+            format,
+            content,
+            created_time,
+            last_edited_time,
+          } = value.value;
+          return {
+            id,
+            type,
+            properties,
+            format,
+            content,
+            created_time,
+            last_edited_time,
+          };
         });
         return makeHTML(values, this.options, htmlFormatter);
       })
@@ -86,13 +98,13 @@ class Notion {
     return notionFetch({
       endpoint: 'loadPageChunk',
       creds: this.creds,
-      body: { pageId: startingPageId }
+      body: { pageId: startingPageId },
     })
       .then(async (r: NotionResponse) => {
         const entries = Object.values(r.recordMap.block).filter(
           ({ value }) => value.type === 'page'
         );
-        return await Promise.all(
+        return Promise.all(
           entries.map(({ value }) => this.getPageById(value.id))
         );
       })
@@ -107,13 +119,13 @@ class Notion {
    */
   async getAllHTML() {
     try {
-      const pageIds = (await this.getPages()) as Array<string>;
-      const elems = await Promise.all(pageIds.map(id => this.getPageById(id)));
-      return elems;
+      const pageIds = await this.getPages();
+      return Promise.all(pageIds.map(id => this.getPageById(id)));
     } catch (error) {
       handleNotionError(error);
       return [];
     }
   }
 }
-export default Notion;
+
+export { Notion };

@@ -1,182 +1,103 @@
-# Unofficial Notion.so API Wrapper (WIP)
+# TSDX User Guide
 
-![npm](https://img.shields.io/npm/v/notion-api-js.svg)
-![npm bundle size](https://img.shields.io/bundlephobia/min/notion-api-js.svg)
+Congrats! You just saved yourself hours of work by bootstrapping this project with TSDX. Let’s get you oriented with what’s here and how to use it.
 
-This repository contains an unofficial port of the [Notion](https://notion.so) API to Node.js. **Important**: It only works in the backend using Node.js and not in a client-side environment.
+> This TSDX setup is meant for developing libraries (not apps!) that can be published to NPM. If you’re looking to build a Node app, you could use `ts-node-dev`, plain `ts-node`, or simple `tsc`.
 
-**IMPORTANT**: You need a token to use the Notion API. You can obtain one by reading your local cookie. You can find instructions for that below.
+> If you’re new to TypeScript, checkout [this handy cheatsheet](https://devhints.io/typescript)
 
-# Documentation
+## Commands
 
-- [Installation](#Installation)
-- [Dependencies](#Dependencies)
-- [Usage](#Usage)
-- [Obtaining Credentials](#Obtaining-Credentials)
-- [Instance Methods](#Instance-Methods)
-- [Disclaimer](#Disclaimer)
+TSDX scaffolds your new library inside `/src`.
 
-# Installation
+To run TSDX, use:
 
-You can either use `npm ` or `yarn ` to install it:
-
-```
-npm i --save notion-api-js
+```bash
+npm start # or yarn start
 ```
 
+This builds to `/dist` and runs the project in watch mode so any edits you save inside `src` causes a rebuild to `/dist`.
+
+To do a one-off build, use `npm run build` or `yarn build`.
+
+To run tests, use `npm test` or `yarn test`.
+
+## Configuration
+
+Code quality is set up for you with `prettier`, `husky`, and `lint-staged`. Adjust the respective fields in `package.json` accordingly.
+
+### Jest
+
+Jest tests are set up to run with `npm test` or `yarn test`.
+
+### Bundle Analysis
+
+[`size-limit`](https://github.com/ai/size-limit) is set up to calculate the real cost of your library with `npm run size` and visualize the bundle with `npm run analyze`.
+
+#### Setup Files
+
+This is the folder structure we set up for you:
+
+```txt
+/src
+  index.tsx       # EDIT THIS
+/test
+  blah.test.tsx   # EDIT THIS
+.gitignore
+package.json
+README.md         # EDIT THIS
+tsconfig.json
 ```
-yarn add notion-api-js
-```
 
-# Usage
+### Rollup
 
-## Creating an instance
+TSDX uses [Rollup](https://rollupjs.org) as a bundler and generates multiple rollup configs for various module formats and build settings. See [Optimizations](#optimizations) for details.
 
-To create an instance, simply pass an object with the token you read from the cookie:
+### TypeScript
+
+`tsconfig.json` is set up to interpret `dom` and `esnext` types, as well as `react` for `jsx`. Adjust according to your needs.
+
+## Continuous Integration
+
+### GitHub Actions
+
+Two actions are added by default:
+
+- `main` which installs deps w/ cache, lints, tests, and builds on all pushes against a Node and OS matrix
+- `size` which comments cost comparison of your library on every pull request using [`size-limit`](https://github.com/ai/size-limit)
+
+## Optimizations
+
+Please see the main `tsdx` [optimizations docs](https://github.com/palmerhq/tsdx#optimizations). In particular, know that you can take advantage of development-only optimizations:
 
 ```js
-// ES Modules syntax
-import Notion from "notion-api-js";
+// ./types/index.d.ts
+declare var __DEV__: boolean;
 
-// require syntax
-const Notion = require("notion-api-js").default;
-
-const notion = new Notion({
-  token: "YOUR_TOKEN_V2"
-});
-```
-
-You can also provide options for the HTML parsing:
-
-```js
-const notion = new Notion({
-  token: "YOUR_TOKEN_V2",
-  options: {
-    colors: {
-      orange: 'CSS COLOR HERE'
-    },
-    pageUrl: 'ABSOLUTE PAGE URL (e.g. /posts/'),
-  }
-});
-```
-
-# Obtaining Credentials
-
-Right now there is no official way of accessing the Notion API but there is a little work-around to get your credentials.
-
-## Prerequisites
-
-You need to have an account on [Notion.so](https://notion.so/) and need to be logged in.
-
-## Getting your credentials
-
-Most of the modern web browsers support inspecting cookies visually using the browser's devtools.
-You can read how to do it in your browser here:
-
-- [Chrome](https://developers.google.com/web/tools/chrome-devtools/manage-data/cookies)
-- [Firefox](https://developer.mozilla.org/en-US/docs/Tools/Storage_Inspector)
-
-After you found the Notion.so cookie, look for an entry called `token_v2`. It is the necessary credential for the `Notion` instance. Simply copy it into your code when you create the instance.
-
-# Instance Options
-
-The options are optionally passed to the instance as a parameter. Those options contain information on how the HTML will be parsed and returned using the instance methods.
-
-### Colors (Object)
-
-Contains definitions for the colors. If this option is omitted the default HTML colors like orange, pink and blue are used. You can change this behavior by passing an object containing color definitions. Example:
-
-```js
-options: {
-    colors: {
-      red: 'tomato',
-      blue: 'rgb(100, 149, 237)',
-      purple: '#9933cc',
-    }
+// inside your code...
+if (__DEV__) {
+  console.log('foo');
 }
 ```
 
-Possible colors are:
+You can also choose to install and use [invariant](https://github.com/palmerhq/tsdx#invariant) and [warning](https://github.com/palmerhq/tsdx#warning) functions.
 
-- red
-- brown
-- orange
-- yellow
-- teal
-- blue
-- purple
-- pink
+## Module Formats
 
-### PageUrl (String)
+CJS, ESModules, and UMD module formats are supported.
 
-The PageUrl is the string passed to the `<a>` tag and is used to build the href of it. The id is inserted after the passed string.
-By default it looks like this `/page?id=`, which results in `<a href="/page?id=SOME_ID">Hello World</a>`
+The appropriate paths are configured in `package.json` and `dist/index.js` accordingly. Please report if any issues are found.
 
-# Instance Methods
+## Named Exports
 
-- [getPages](<#getPages()>)
-- [getPageById](<#getPageById(pageId)>)
-- [getPagesByIndexId](<#getPagesByIndexId(pageId)>)
-- [getAllHTML](<#getAllHTML()>)
+Per Palmer Group guidelines, [always use named exports.](https://github.com/palmerhq/typescript#exports) Code split inside your React app instead of your React library.
 
-## getPages()
+## Including Styles
 
-Gets all pages of the user by the userId passed to the `Notion ` instance. All pages are parsed to HTML.
+There are many ways to ship styles, including with CSS-in-JS. TSDX has no opinion on this, configure how you like.
 
-**Example**
+For vanilla CSS, you can include it at the root directory and add it to the `files` section in your `package.json`, so that it can be imported separately by your users and run through their bundler's loader.
 
-```js
-notion.getPages().then(pages => {
-  // Your Code here
-});
-```
+## Publishing to NPM
 
-## getPageById(pageId)
-
-Gets a Notion page by the pageId and returns the parsed HTML.
-
-**Parameters**:
-
-| **Parameter** | **Type** | **Opt/Required** |
-| ------------- | -------- | ---------------- |
-| pageId        | string   | Required         |
-
-**Example**
-
-```js
-notion.getPageById("pageId").then(page => {
-  // Your code here
-});
-```
-
-## getPagesByIndexId(pageId)
-
-Gets a Notion page by the given pageId and all subpages of that page. Useful if you want to use a homepage.
-
-**Parameters**:
-
-| **Parameter** | **Type** | **Opt/Required** |
-| ------------- | -------- | ---------------- |
-| pageId        | string   | Required         |
-
-**Example**
-
-```js
-notion.getPagesByIndexId("pageId").then(page => {
-  // Your code here
-});
-```
-
-## getAllHTML() [WIP]
-
-Gets the HTML for all pages.
-
-```js
-notion.getAllHTML().then(html => {
-  // Your Ccode here
-});
-```
-
-# Disclaimer
-
-It's really WIP right now but I would highly appreciate if you would like to contribute to the project. Just fork this repository and create a PR 😄
+We recommend using [np](https://github.com/sindresorhus/np).
