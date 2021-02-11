@@ -1,7 +1,7 @@
-import fetch from "node-fetch";
-import { NotionResponse } from "./types";
+import fetch from 'node-fetch';
+import { NotionResponse } from './types';
 
-const BASEURL = "https://www.notion.so/api/v3/";
+const BASEURL = 'https://www.notion.so/api/v3/';
 
 const getAllBlocks = async ({
   url,
@@ -13,51 +13,54 @@ const getAllBlocks = async ({
   resolve,
   reject,
   body,
-} : {
-  url: string,
-  token: string,
-  limit: number,
-  stack: Array<any>,
-  chunkNumber: number,
-  res: { recordMap: {block: object } },
-  resolve: Function,
-  reject: Function,
-  body?: object,
+}: {
+  url: string;
+  token: string;
+  limit: number;
+  stack: Array<any>;
+  chunkNumber: number;
+  res: { recordMap: { block: object } };
+  resolve: Function;
+  reject: Function;
+  body?: object;
 }) => {
   return fetch(url, {
     headers: {
-      accept: "*/*",
-      "accept-language": "de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7",
-      "content-type": "application/json",
-      cookie: `token_v2=${token};`
+      accept: '*/*',
+      'accept-language': 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7',
+      'content-type': 'application/json',
+      cookie: `token_v2=${token};`,
     },
     body: JSON.stringify({
       cursor: { stack },
       chunkNumber,
       ...body,
       limit,
-      verticalColumns: false
+      verticalColumns: false,
     }),
-    method: "POST"
+    method: 'POST',
   })
     .then(response => response.json())
     .then(r => {
       if (((r.cursor || {}).stack || {}).length) {
         getAllBlocks({
-          url,token,limit, stack: r.cursor.stack,
+          url,
+          token,
+          limit,
+          stack: r.cursor.stack,
           chunkNumber: chunkNumber + 1,
           res: {
             recordMap: {
               block: {
                 ...res.recordMap.block,
                 ...r.recordMap.block,
-              }
-            }
+              },
+            },
           },
           resolve,
           reject,
-          body
-        })
+          body,
+        });
       } else {
         if (r.errorId) {
           reject(r);
@@ -67,10 +70,10 @@ const getAllBlocks = async ({
             block: {
               ...res.recordMap.block,
               ...(r.recordMap || {}).block,
-            }
-          }
+            },
+          },
         };
-        resolve(ret)
+        resolve(ret);
       }
     })
     .catch((error: Error) => console.error(error));
@@ -79,11 +82,11 @@ const getAllBlocks = async ({
 function request({
   endpoint,
   creds: { token },
-  body
+  body,
 }: {
   endpoint: string;
   creds: { token: string };
-  body?: { limit?: number, pageId: string };
+  body?: { limit?: number; pageId: string };
 }): Promise<NotionResponse> {
   return new Promise((resolve, reject) => {
     getAllBlocks({
@@ -93,12 +96,12 @@ function request({
       stack: [],
       chunkNumber: 0,
       res: {
-        recordMap: { block: {} }
+        recordMap: { block: {} },
       },
       resolve,
       reject,
-      body
-    })
+      body,
+    });
   });
 }
 export default request;

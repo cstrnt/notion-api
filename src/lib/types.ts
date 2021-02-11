@@ -22,7 +22,7 @@ export type NotionObject = {
   };
   content: Array<string>;
   created_time: number;
-  last_edited_time: number
+  last_edited_time: number;
 };
 
 export type NotionResponse = {
@@ -57,6 +57,11 @@ export interface PageDTO {
   Attributes?: Attributes;
 }
 
-export type htmlResponse = string | { [x: string]: string; } | null;
+export type htmlResponse = string | { [x: string]: string } | null;
 
-export type formatter = ((ObjectToParse: NotionObject, options: Options, index: number, ObjectList: Array<NotionObject>) => htmlResponse);
+export type formatter = (
+  ObjectToParse: NotionObject,
+  options: Options,
+  index: number,
+  ObjectList: Array<NotionObject>
+) => htmlResponse;

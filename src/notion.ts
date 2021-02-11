@@ -18,8 +18,8 @@ class Notion {
     token,
     options = {
       colors: {},
-      pageUrl: '/page?id='
-    }
+      pageUrl: '/page?id=',
+    },
   }: {
     token: string;
     options: Options;
@@ -28,7 +28,7 @@ class Notion {
     if (!notionToken)
       throw new Error('You need to provide the token to use the API');
     this.creds = {
-      token: notionToken
+      token: notionToken,
     };
     this.options = options;
   }
@@ -52,21 +52,33 @@ class Notion {
    * Gets the content of a page by ID as HTML
    * @param {string} pageId The ID of the notion page
    */
-  getPageById(
-    pageId: string,
-    htmlFormatter?: formatter,
-    limit?: number,
-    ) {
+  getPageById(pageId: string, htmlFormatter?: formatter, limit?: number) {
     return notionFetch({
       endpoint: 'loadPageChunk',
       creds: this.creds,
-      body: { pageId, limit }
+      body: { pageId, limit },
     })
       .then((r: NotionResponse) => {
         const entries = r.recordMap.block;
         const values = Object.values(entries).map(value => {
-          const { id, type, properties, format, content, created_time, last_edited_time } = value.value;
-          return { id, type, properties, format, content, created_time, last_edited_time };
+          const {
+            id,
+            type,
+            properties,
+            format,
+            content,
+            created_time,
+            last_edited_time,
+          } = value.value;
+          return {
+            id,
+            type,
+            properties,
+            format,
+            content,
+            created_time,
+            last_edited_time,
+          };
         });
         return makeHTML(values, this.options, htmlFormatter);
       })
@@ -86,7 +98,7 @@ class Notion {
     return notionFetch({
       endpoint: 'loadPageChunk',
       creds: this.creds,
-      body: { pageId: startingPageId }
+      body: { pageId: startingPageId },
     })
       .then(async (r: NotionResponse) => {
         const entries = Object.values(r.recordMap.block).filter(

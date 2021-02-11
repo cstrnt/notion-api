@@ -1,4 +1,11 @@
-import { NotionObject, Options, Attributes, PageDTO, formatter, htmlResponse } from './types';
+import {
+  NotionObject,
+  Options,
+  Attributes,
+  PageDTO,
+  formatter,
+  htmlResponse,
+} from './types';
 import slugify from 'slugify';
 
 // Seperator for good-looking HTML ;)
@@ -15,7 +22,7 @@ const types = {
   break: 'br',
   numbered_list: 'ol',
   bulleted_list: 'ul',
-  image: 'img'
+  image: 'img',
 };
 
 /**
@@ -41,16 +48,14 @@ function formatToHtml(
     properties &&
     properties.title &&
     properties.title[0][0].replace(/\[.*\]:.{1,}/, '');
-  const source =
-    properties &&
-    properties.source;
+  const source = properties && properties.source;
   const tags = (content && content[0] ? content[0][0] : '').match(
     /\[.{1,}\]: .{1,}/
   );
   const attrib = tags && tags[0].replace(/(\[|\])/g, '').split(':');
-  if (attrib && attrib.length == 2) {
+  if (attrib && attrib.length === 2) {
     return {
-      [attrib[0]]: attrib[1].trim()
+      [attrib[0]]: attrib[1].trim(),
     };
   }
 
@@ -102,14 +107,18 @@ function formatToHtml(
  * @param {*} options Options for parsing
  * @param {*} htmlFormatter html renderer
  */
-function formatList(ObjectList: Array<NotionObject>, options: Options, htmlFormatter?: formatter) {
+function formatList(
+  ObjectList: Array<NotionObject>,
+  options: Options,
+  htmlFormatter?: formatter
+) {
   const items = [];
   const attributes: Attributes = {};
   for (let index = 0; index < ObjectList.length; index += 1) {
     const element = ObjectList[index];
     let html: htmlResponse;
     if (htmlFormatter) {
-       html = htmlFormatter(element, options, index, ObjectList);  
+      html = htmlFormatter(element, options, index, ObjectList);
     } else {
       html = formatToHtml(element, options, index);
     }
@@ -142,9 +151,10 @@ function formatList(ObjectList: Array<NotionObject>, options: Options, htmlForma
     }
   }
   const { format, created_time, last_edited_time, properties } = ObjectList[0];
-  const created_datetime = new Date(created_time).toDateString()
-  const last_edited_datetime = new Date(last_edited_time).toDateString()
-  const title = (properties && properties.title && properties.title[0][0]) || '';
+  const created_datetime = new Date(created_time).toDateString();
+  const last_edited_datetime = new Date(last_edited_time).toDateString();
+  const title =
+    (properties && properties.title && properties.title[0][0]) || '';
   const cover =
     format && format.page_cover
       ? format.page_cover.includes('http')
@@ -156,7 +166,7 @@ function formatList(ObjectList: Array<NotionObject>, options: Options, htmlForma
     attributes: {
       ...attributes,
       title,
-      created_datetime, 
+      created_datetime,
       last_edited_datetime,
       slug: slugify(title, { lower: true }),
       cover,
@@ -164,15 +174,15 @@ function formatList(ObjectList: Array<NotionObject>, options: Options, htmlForma
         .map(i =>
           i
             .replace(/\[.{1,}\]: .{1,}/g, '')
-            .replace(/\<a.*\>*\<\/a\>/g, '')
+            .replace(/<a.*>*<\/a>/g, '')
             .replace(/<[^>]*>/g, '')
         )
         .filter(i => i)
         .join(' ')
         .trim()
         .substring(0, 200),
-      icon: format ? format.page_icon : null
-    }
+      icon: format ? format.page_icon : null,
+    },
   };
 }
 
@@ -191,7 +201,7 @@ function toHTMLPage(
   const elementsString = items.join('');
   return {
     HTML: elementsString ? `<div>${elementsString}</div>` : '',
-    Attributes: { ...attributes, id: ObjectList[0].id }
+    Attributes: { ...attributes, id: ObjectList[0].id },
   };
 }
 
