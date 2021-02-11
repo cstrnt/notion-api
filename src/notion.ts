@@ -7,8 +7,8 @@ import * as process from 'process';
  * The Notion API Wrapper Class
  */
 class Notion {
-  creds: { token: string };
-  options: Options;
+  private creds: { token: string };
+  private options: Options;
   /**
    * Creates a new Notion API Wrapper instance
    * if no token is provided it will look for the ENV Variable NOTION_TOKEN
@@ -92,7 +92,7 @@ class Notion {
         const entries = Object.values(r.recordMap.block).filter(
           ({ value }) => value.type === 'page'
         );
-        return await Promise.all(
+        return Promise.all(
           entries.map(({ value }) => this.getPageById(value.id))
         );
       })
@@ -107,13 +107,13 @@ class Notion {
    */
   async getAllHTML() {
     try {
-      const pageIds = (await this.getPages()) as Array<string>;
-      const elems = await Promise.all(pageIds.map(id => this.getPageById(id)));
-      return elems;
+      const pageIds = await this.getPages();
+      return Promise.all(pageIds.map(id => this.getPageById(id)));
     } catch (error) {
       handleNotionError(error);
       return [];
     }
   }
 }
-export default Notion;
+
+export { Notion };
